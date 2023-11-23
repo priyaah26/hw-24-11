@@ -1,0 +1,134 @@
+package org.seleniumbatch4;
+
+import java.io.File;
+import java.io.IOException;
+import java.time.Duration;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+public class Screenshot {
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--remote-allow-origins=*");
+		DesiredCapabilities capabilities = new DesiredCapabilities();
+		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+		options.merge(capabilities);
+		ChromeDriver driver = new ChromeDriver(options);
+		
+		//implicit wait
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+
+		driver.get("https://www.google.com/");
+		driver.manage().window().maximize();
+		
+		TakesScreenshot screenshotDriver = (TakesScreenshot) driver;
+
+        File screenshotFile = screenshotDriver.getScreenshotAs(OutputType.FILE);
+        
+        File DestFile = new File("D:\\screenshot.png");
+        
+        String screenSavedPath = "D:\\screenshot.png";
+
+        FileUtils.copyFile(screenshotFile, DestFile);
+        
+        System.out.println("screenshot saved to the folder: " + screenSavedPath);
+  
+       
+	}
+
+}
+--------------------------------------------------------------------------------------------------------------------
+
+package org.seleniumbatch4;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+public class WritingExcel {
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+FileOutputStream file=new FileOutputStream(System.getProperty("user.dir")+"\\testdataexcel\\writeExcel.xlsx"); 
+
+		
+		XSSFWorkbook workbook=new XSSFWorkbook();
+		
+		XSSFSheet sheet=workbook.createSheet();
+		
+		//Creating rows, cells and update data without loop
+		XSSFRow row1=sheet.createRow(0);
+				
+		row1.createCell(0).setCellValue("welcome you");
+		row1.createCell(1).setCellValue("123456");
+		row1.createCell(2).setCellValue("xyza");
+				
+		XSSFRow row2=sheet.createRow(1);
+		
+		row2.createCell(0).setCellValue("abcd");
+		row2.createCell(1).setCellValue("45678");
+		row2.createCell(2).setCellValue("testing done");
+			
+		workbook.write(file);
+		workbook.close();
+		file.close();
+		
+		System.out.println("Writing is done!!!!");
+	}
+}
+--------------------------------------------------------------------------------------------------------------
+package org.seleniumbatch4;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+public class ReadingExcel {
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+FileInputStream file=new FileInputStream(System.getProperty("user.dir")+"\\testdataexcel\\readingExcel.xlsx");
+		
+		XSSFWorkbook workbook=new XSSFWorkbook(file);
+		
+		XSSFSheet sheet=workbook.getSheet("Sheet1");  
+		
+		int totalrows=sheet.getLastRowNum();
+		int totalcells=sheet.getRow(1).getLastCellNum();
+		
+		System.out.println("Number of rows:"+totalrows); 
+		System.out.println("Number of cells:"+totalcells);  
+		
+		for(int r=0;r<=totalrows;r++)
+		{
+			XSSFRow currentRow=sheet.getRow(r);
+					
+			for(int c=0;c<totalcells;c++)
+			{
+				
+				String value=currentRow.getCell(c).toString();
+				System.out.print(value+"      ");
+			}
+			System.out.println();
+		}
+		
+		workbook.close();
+		file.close();
+
+	}
+
+}
+--------------------------------------------------------------------------------------------------------------
